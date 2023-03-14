@@ -3,7 +3,6 @@
 
 int main() {
     conf_information conf;
-    conf.get_conf();
     load_balancer_client client;
     client.start_client();
 
