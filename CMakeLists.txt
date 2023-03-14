@@ -5,6 +5,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(source_list
         src/main.cpp
         src/load_balancer_server.h
-        src/load_balancer_server.cpp)
+        src/load_balancer_server.cpp
+        src/conf_information.h
+        src/conf_information.cpp)
 
 add_executable(${PROJECT_NAME} ${source_list})
