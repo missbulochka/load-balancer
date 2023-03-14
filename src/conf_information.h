@@ -4,23 +4,23 @@
 #include <string>
 #include <vector>
 
-class conf_information {
+class config {
 public:
-    conf_information();
+    config();
 
-    std::uint32_t get_port() const;
+    std::uint16_t get_port() const;
 
     std::uint32_t get_max_number_of_datagrams() const;
 
-    std::vector<std::string> get_available_node();
+    std::vector<std::string> get_available_node() const;
 
 private:
-    std::uint32_t port{0};
-    std::uint32_t max_number_of_datagrams{0};
-    std::vector<std::string> available_node{};
+    std::uint16_t port;
+    std::uint32_t max_number_of_datagrams;
+    std::vector<std::string> available_node;
 
     void get_conf();
 };
 
 
-#endif //LOAD_BALANCER_CONF_INFORMATION_H
+#endif  //LOAD_BALANCER_CONF_INFORMATION_H

@@ -4,7 +4,7 @@
 int main() {
     load_balancer_server server;
     server.start_server();
-    conf_information conf;
+    config conf;
 
     return 0;
 }
