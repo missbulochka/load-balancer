@@ -1,4 +1,3 @@
-#include <iostream>
 #include "conf_information.h"
 
 int main() {
