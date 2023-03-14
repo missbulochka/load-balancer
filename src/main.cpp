@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 #include "load_balancer_server.h"
+=======
+>>>>>>> 9795b59 (format)
 #include "conf_information.h"
 
 int main() {
