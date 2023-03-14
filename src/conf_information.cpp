@@ -2,12 +2,14 @@
 #include <fstream>
 #include <iostream>
 
-
-conf_information::conf_information() {
+config::config()
+    : port(50055)
+    , max_number_of_datagrams(10)
+    , available_node() {
     get_conf();
 }
 
-void conf_information::get_conf() {
+void config::get_conf() {
     std::string config_string{};
     std::fstream config_file("../src/load_balancer.conf");
 
@@ -15,27 +17,30 @@ void conf_information::get_conf() {
         for (config_file >> config_string; !config_file.eof(); config_file >> config_string) {
             if (config_string == "read_node:") {
                 config_file >> port;
-            } else if (config_string == "max_number_of_datagrams:") {
+            }
+            else if (config_string == "max_number_of_datagrams:") {
                 config_file >> max_number_of_datagrams;
-            } else if (config_string == "workers:") {
+            }
+            else if (config_string == "workers:") {
                 while ((config_file >> config_string) && !config_file.eof()) {
                     available_node.push_back(config_string);
                 }
             }
         }
-    } else {
+    }
+    else {
         std::cout << "Unable to open config file\n";
     }
 }
 
-std::uint32_t conf_information::get_port() const {
+std::uint16_t config::get_port() const {
     return port;
 }
 
-std::uint32_t conf_information::get_max_number_of_datagrams() const {
+std::uint32_t config::get_max_number_of_datagrams() const {
     return max_number_of_datagrams;
 }
 
-std::vector<std::string> conf_information::get_available_node() {
+std::vector<std::string> config::get_available_node() const {
     return available_node;
 }
