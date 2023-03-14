@@ -1,7 +1,10 @@
-#include "iostream"
+#include <iostream>
+#include "conf_information.h"
 
 int main() {
-    std::cout << "Hello";
+    conf_information conf;
+
+    conf.get_conf();
 
     return 0;
 }
