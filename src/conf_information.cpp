@@ -6,7 +6,7 @@
 void get_parameter(std::fstream &config_file, conf_information *this_ptr) {
     std::string config_string{};
 
-    for(config_file >> config_string; !config_file.eof(); config_file >> config_string) {
+    for (config_file >> config_string; !config_file.eof(); config_file >> config_string) {
         if (config_string == "read_node") {
             config_file >> config_string;
             config_file >> this_ptr->read_node;
