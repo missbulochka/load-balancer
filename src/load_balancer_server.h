@@ -13,14 +13,12 @@ public:
 private:
     int sockfd;
     std::uint16_t port;
-    const std::string* server_response;
-    std::string client_response[1024];
+    std::string datagram[1024];
+    socklen_t client_address_len;
 
     struct sockaddr_in client_addr;
 
-    struct sockaddr_in server_addr {
-        AF_INET, htons(port), INADDR_ANY,
-    };
+    struct sockaddr_in server_addr;
 };
 
 
