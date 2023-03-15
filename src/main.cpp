@@ -1,5 +1,5 @@
 #include "load_balancer_client.h"
-#include "conf_information.h"
+#include "config.h"
 
 int main() {
     config conf;
