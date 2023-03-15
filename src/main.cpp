@@ -1,5 +1,5 @@
 #include "load_balancer_server.h"
-#include "conf_information.h"
+#include "config.h"
 
 int main() {
     load_balancer_server server;
