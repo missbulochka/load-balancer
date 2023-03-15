@@ -1,7 +1,10 @@
-#include "iostream"
+#include <iostream>
+#include "load_balancer_server.h"
 
 int main() {
-    std::cout << "Hello";
+    load_balancer_server server;
+
+    server.recv_datagram();
 
     return 0;
 }
