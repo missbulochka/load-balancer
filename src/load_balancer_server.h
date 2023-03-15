@@ -14,11 +14,11 @@ private:
     int sockfd;
     std::uint16_t port;
     std::string datagram[1024];
-    socklen_t client_address_len;
-
     struct sockaddr_in client_addr;
-
+    socklen_t client_addr_len;
     struct sockaddr_in server_addr;
+
+    void start_server();
 };
 
 

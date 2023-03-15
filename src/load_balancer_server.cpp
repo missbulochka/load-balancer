@@ -1,19 +1,27 @@
 #include "load_balancer_server.h"
 #include <sys/socket.h>
+#include <iostream>
 
 load_balancer_server::load_balancer_server()
-    : sockfd(-1)
+    : sockfd()
     , port(5000)
     , datagram()
-    , client_address_len(sizeof(client_addr))
     , client_addr{}
+    , client_addr_len(sizeof(client_addr))
     , server_addr{AF_INET, htons(port), INADDR_ANY} {
+    start_server();
+}
+
+void load_balancer_server::start_server() {
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         perror("Socket creation failed");
         exit(EXIT_FAILURE);
     }
 
-    if (bind(sockfd, reinterpret_cast<const struct sockaddr*>(&server_addr), sizeof(server_addr)) < 0) {
+    if (bind(sockfd,
+             reinterpret_cast<const struct sockaddr*>(&server_addr),
+             sizeof(server_addr))
+        < 0) {
         perror("Bind failed");
         exit(EXIT_FAILURE);
     }
@@ -26,10 +34,11 @@ void load_balancer_server::recv_datagram() {
                      sizeof(datagram),
                      MSG_WAITALL,
                      reinterpret_cast<struct sockaddr*>(&client_addr),
-                     &client_address_len)
+                     &client_addr_len)
             == -1) {
             perror("Error receiving datagram from socket");
             exit(EXIT_FAILURE);
         }
+        std::cout << "Datagram received\n";
     }
 }
