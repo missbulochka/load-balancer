@@ -5,12 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(source_list
         src/main.cpp
         src/config.h
-<<<<<<< HEAD
         src/config.cpp
+        src/load_balancer_server.h
+        src/load_balancer_server.cpp
         src/load_balancer_client.h
         src/load_balancer_client.cpp)
-=======
-        src/config.cpp)
->>>>>>> 98ee380 (rename files)
 
 add_executable(${PROJECT_NAME} ${source_list})
