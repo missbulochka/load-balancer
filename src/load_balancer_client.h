@@ -13,7 +13,7 @@ public:
 private:
     int sockfd;
     std::uint16_t port;
-    std::string datagram[1024];
+    std::string datagram;
     struct sockaddr_in server_addr;
 
     static void signal_handler(int signum);

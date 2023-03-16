@@ -6,7 +6,7 @@
 load_balancer_client::load_balancer_client()
     : sockfd()
     , port(5001)
-    , datagram()
+    , datagram(static_cast<std::string>("5"))
     , server_addr{AF_INET, htons(port), INADDR_ANY} {}
 
 void load_balancer_client::close_socket() {}
@@ -25,13 +25,21 @@ void load_balancer_client::create_socket() {
 }
 
 void load_balancer_client::send_datagram() {
+    std::cout << datagram << '\n';
     while (true) {
-        sendto(sockfd,
-               reinterpret_cast<const void*>(&datagram),
-               sizeof(datagram),
-               MSG_CONFIRM,
-               reinterpret_cast<const struct sockaddr*>(&server_addr),
-               sizeof(server_addr));
+        sleep(1);
+        if (sendto(sockfd,
+                   reinterpret_cast<const void*>(&datagram),
+                   datagram.size(),
+                   MSG_CONFIRM,
+                   reinterpret_cast<const struct sockaddr*>(&server_addr),
+                   sizeof(server_addr))
+            == -1) {
+            perror("Error receiving datagram from socket");
+            continue;
+        } else {
+            std::cout << "Datagram sent successfully\n";
+        }
     }
 }
 
