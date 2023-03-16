@@ -4,7 +4,7 @@
 int main() {
     load_balancer_server server;
 
-    server.recv_datagram();
+    server.start_server();
 
     return 0;
 }
