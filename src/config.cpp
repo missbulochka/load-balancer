@@ -5,7 +5,7 @@
 config::config()
     : port(50055)
     , max_number_of_datagrams(10)
-    , nodes() {
+    , workers() {
     get_conf();
 }
 
@@ -37,7 +37,7 @@ void config::get_conf() {
         }
         else if (config_string == "workers:") {
             while (config_file >> config_string) {
-                nodes.push_back(make_addr_pair(config_string));
+                workers.push_back(make_addr_pair(config_string));
             }
         }
     }
@@ -51,6 +51,6 @@ std::uint32_t config::get_max_number_of_datagrams() const {
     return max_number_of_datagrams;
 }
 
-std::vector<std::pair<std::string, std::uint16_t>> config::get_nodes() const {
-    return nodes;
+std::vector<std::pair<std::string, std::uint16_t>> config::get_workers() const {
+    return workers;
 }
