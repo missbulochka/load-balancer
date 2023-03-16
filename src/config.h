@@ -12,12 +12,12 @@ public:
 
     std::uint32_t get_max_number_of_datagrams() const;
 
-    std::vector<std::pair<std::string, std::uint16_t>> get_nodes() const;
+    std::vector<std::pair<std::string, std::uint16_t>> get_workers() const;
 
 private:
     std::uint16_t port;
     std::uint32_t max_number_of_datagrams;
-    std::vector<std::pair<std::string, std::uint16_t>> nodes;
+    std::vector<std::pair<std::string, std::uint16_t>> workers;
 
     static std::pair<std::string, std::uint16_t> make_addr_pair(const std::string&);
     void get_conf();
