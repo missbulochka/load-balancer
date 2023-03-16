@@ -13,7 +13,6 @@ load_balancer_server::load_balancer_server()
     start_server();
 }
 
-
 void load_balancer_server::signal_handler(int signal_num) {
     std::cout << "Interrupt signal (" << signal_num << "reveived\n";
     exit(signal_num);
@@ -43,7 +42,7 @@ void load_balancer_server::recv_datagram() {
                      &client_addr_len)
             == -1) {
             perror("Error receiving datagram from socket");
-            continue ;
+            continue;
         }
         std::cout << "Datagram received\n";
     }
