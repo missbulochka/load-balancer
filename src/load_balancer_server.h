@@ -8,18 +8,20 @@
 class load_balancer_server {
 public:
     load_balancer_server();
-    void recv_datagram();
+    void start_server();
 
 private:
     int sockfd;
     std::uint16_t port;
     std::string datagram[1024];
-    struct sockaddr_in client_addr;
     socklen_t client_addr_len;
+    struct sockaddr_in client_addr;
     struct sockaddr_in server_addr;
 
-    void start_server();
     static void signal_handler(int signum);
+    void create_socket();
+    void bind_socket();
+    void recv_datagram();
 };
 
 
