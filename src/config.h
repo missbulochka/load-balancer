@@ -12,13 +12,14 @@ public:
 
     std::uint32_t get_max_number_of_datagrams() const;
 
-    std::vector<std::string> get_available_node() const;
+    std::vector<std::pair<std::string, std::uint16_t>> get_nodes() const;
 
 private:
     std::uint16_t port;
     std::uint32_t max_number_of_datagrams;
-    std::vector<std::string> available_node;
+    std::vector<std::pair<std::string, std::uint16_t>> nodes;
 
+    static std::pair<std::string, std::uint16_t> make_addr_pair(const std::string&);
     void get_conf();
 };
 
