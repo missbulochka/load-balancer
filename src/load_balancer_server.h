@@ -19,6 +19,7 @@ private:
     struct sockaddr_in server_addr;
 
     void start_server();
+    static void signal_handler(int signum);
 };
 
 
