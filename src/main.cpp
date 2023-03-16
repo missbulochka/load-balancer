@@ -1,7 +1,9 @@
-#include "iostream"
+#include <iostream>
+#include "load_balancer_client.h"
 
 int main() {
-    std::cout << "Hello";
+    load_balancer_client client;
+    client.start_client();
 
     return 0;
 }
