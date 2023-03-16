@@ -1,11 +1,13 @@
 #include "load_balancer_client.h"
 #include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 #include <iostream>
 #include <csignal>
 
 load_balancer_client::load_balancer_client()
     : sockfd()
-    , port(5001)
+    , port(5002)
     , datagram(static_cast<std::string>("5"))
     , server_addr{AF_INET, htons(port), INADDR_ANY} {}
 
@@ -25,7 +27,9 @@ void load_balancer_client::create_socket() {
 }
 
 void load_balancer_client::send_datagram() {
-    std::cout << datagram << '\n';
+    if (inet_aton("127.0.0.1", &server_addr.sin_addr) == 0) {
+        perror("inet_aton() failed");
+    }
     while (true) {
         sleep(1);
         if (sendto(sockfd,
@@ -37,7 +41,8 @@ void load_balancer_client::send_datagram() {
             == -1) {
             perror("Error receiving datagram from socket");
             continue;
-        } else {
+        }
+        else {
             std::cout << "Datagram sent successfully\n";
         }
     }
