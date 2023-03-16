@@ -3,6 +3,6 @@ project(load_balancer)
 
 set(CMAKE_CXX_STANDARD 17)
 set(source_list
-        src/main.cpp)
+        src/main.cpp src/load_balancer_client.cpp src/load_balancer_client.h)
 
 add_executable(${PROJECT_NAME} ${source_list})
