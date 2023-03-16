@@ -1,5 +1,4 @@
 #include "load_balancer_client.h"
-<<<<<<< HEAD
 #include <sys/socket.h>
 #include <iostream>
 #include <csignal>
@@ -41,5 +40,3 @@ void load_balancer_client::start_client() {
     signal(SIGTERM, signal_handler);
     send_datagram();
 }
-=======
->>>>>>> 809be37 (create class load_balancer_client)

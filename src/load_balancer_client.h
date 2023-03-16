@@ -1,7 +1,6 @@
 #ifndef LOAD_BALANCER_LOAD_BALANCER_CLIENT_H
 #define LOAD_BALANCER_LOAD_BALANCER_CLIENT_H
 
-<<<<<<< HEAD
 #include <cstdint>
 #include <string>
 #include <netinet/in.h>
@@ -22,8 +21,6 @@ private:
     void send_datagram();
     void close_socket();
 };
-=======
-class load_balancer_client {};
->>>>>>> 809be37 (create class load_balancer_client)
+
 
 #endif  //LOAD_BALANCER_LOAD_BALANCER_CLIENT_H
