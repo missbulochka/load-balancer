@@ -9,6 +9,7 @@ class load_balancer_server {
 public:
     load_balancer_server();
     void start_server();
+    void stop_server();
 
 private:
     int sockfd;

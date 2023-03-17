@@ -35,24 +35,29 @@ void load_balancer_server::bind_socket() {
 }
 
 void load_balancer_server::recv_datagram() {
-    if (recvfrom(sockfd,
-                 reinterpret_cast<void*>(datagram),
-                 sizeof(datagram),
-                 MSG_WAITALL,
-                 reinterpret_cast<struct sockaddr*>(&client_addr),
-                 &client_addr_len)
-        == -1) {
-        perror("Error receiving datagram from socket");
-        return;
+    while (true) {
+        if (recvfrom(sockfd,
+                     reinterpret_cast<void*>(datagram),
+                     sizeof(datagram),
+                     MSG_WAITALL,
+                     reinterpret_cast<struct sockaddr*>(&client_addr),
+                     &client_addr_len)
+            == -1) {
+            perror("Error receiving datagram from socket");
+            return;
+        }
+        std::cout << "Datagram received\n";
     }
-    std::cout << "Datagram received\n";
 }
 
 void load_balancer_server::start_server() {
     create_socket();
     bind_socket();
     signal(SIGTERM, signal_handler);
-    while (true) {
-        recv_datagram();
-    }
+    recv_datagram();
+}
+
+void load_balancer_server::stop_server() {
+    shutdown(sockfd, SHUT_RDWR);
+    close(sockfd);
 }
