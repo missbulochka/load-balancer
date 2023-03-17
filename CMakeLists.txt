@@ -9,6 +9,7 @@ set(source_list
         src/load_balancer_server.h
         src/load_balancer_server.cpp
         src/load_balancer_client.h
-        src/load_balancer_client.cpp)
+        src/load_balancer_client.cpp
+        src/balancer.cpp src/balancer.h)
 
 add_executable(${PROJECT_NAME} ${source_list})

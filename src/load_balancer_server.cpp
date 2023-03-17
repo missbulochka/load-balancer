@@ -1,11 +1,12 @@
 #include "load_balancer_server.h"
+#include "balancer.h"
 #include <sys/socket.h>
 #include <iostream>
 #include <csignal>
 
 load_balancer_server::load_balancer_server()
     : sockfd()
-    , port(5000)
+    , port(50055)
     , datagram()
     , client_addr_len(sizeof(client_addr))
     , client_addr{}
@@ -25,8 +26,7 @@ void load_balancer_server::create_socket() {
 }
 
 void load_balancer_server::bind_socket() {
-    // port = config.get_port();
-    // server_addr.sin_port = htons(port);
+    server_addr.sin_port = htons(port);
     if (bind(sockfd, reinterpret_cast<const struct sockaddr*>(&server_addr), sizeof(server_addr)) < 0) {
         perror("Bind failed");
         exit(EXIT_FAILURE);
@@ -50,8 +50,9 @@ void load_balancer_server::recv_datagram() {
     }
 }
 
-void load_balancer_server::start_server() {
+void load_balancer_server::start_server(std::uint16_t recv_port) {
     create_socket();
+    port = recv_port;
     bind_socket();
     signal(SIGTERM, signal_handler);
     recv_datagram();

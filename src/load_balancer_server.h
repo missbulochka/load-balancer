@@ -7,8 +7,8 @@
 
 class load_balancer_server {
 public:
-    load_balancer_server();
-    void start_server();
+    explicit load_balancer_server();
+    void start_server(std::uint16_t port);
     void stop_server();
 
 private:
