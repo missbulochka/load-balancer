@@ -7,11 +7,9 @@
 
 load_balancer_client::load_balancer_client()
     : sockfd()
-    , port(5002)
-    , datagram(static_cast<std::string>("5"))
+    , port(5001)
+    , datagram()
     , server_addr{AF_INET, htons(port), INADDR_ANY} {}
-
-void load_balancer_client::close_socket() {}
 
 void load_balancer_client::signal_handler(int signal_num) {
     std::cout << "Interrupt signal (" << signal_num << ") received\n";
@@ -27,9 +25,12 @@ void load_balancer_client::create_socket() {
 }
 
 void load_balancer_client::send_datagram() {
-    if (inet_aton("127.0.0.1", &server_addr.sin_addr) == 0) {
+    // datagram = server.datagram;
+    /* get_addr
+     if (inet_aton("127.0.0.1", &server_addr.sin_addr) == 0) {
         perror("inet_aton() failed");
-    }
+    } */
+
     while (true) {
         sleep(1);
         if (sendto(sockfd,
@@ -42,9 +43,6 @@ void load_balancer_client::send_datagram() {
             perror("Error receiving datagram from socket");
             continue;
         }
-        else {
-            std::cout << "Datagram sent successfully\n";
-        }
     }
 }
 
@@ -52,4 +50,8 @@ void load_balancer_client::start_client() {
     create_socket();
     signal(SIGTERM, signal_handler);
     send_datagram();
+}
+
+void load_balancer_client::close_socket() {
+    close(sockfd);
 }
