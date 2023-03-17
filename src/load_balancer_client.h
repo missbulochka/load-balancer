@@ -9,6 +9,7 @@ class load_balancer_client {
 public:
     load_balancer_client();
     void start_client();
+    void stop_client();
 
 private:
     int sockfd;
@@ -19,7 +20,6 @@ private:
     static void signal_handler(int signum);
     void create_socket();
     void send_datagram();
-    void close_socket();
 };
 
 

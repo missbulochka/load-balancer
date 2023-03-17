@@ -52,6 +52,7 @@ void load_balancer_client::start_client() {
     send_datagram();
 }
 
-void load_balancer_client::close_socket() {
+void load_balancer_client::stop_client() {
+    shutdown(sockfd, SHUT_RDWR);
     close(sockfd);
 }
