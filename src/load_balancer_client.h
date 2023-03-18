@@ -8,7 +8,8 @@
 class load_balancer_client {
 public:
     load_balancer_client();
-    void start_client(std::pair<std::string, std::uint16_t> recv_worker);
+    void start_client();
+    void send_datagram(std::pair<std::string, std::uint16_t> recv_worker);
     void stop_client();
 
 private:
@@ -19,7 +20,6 @@ private:
 
     static void signal_handler(int signum);
     void create_socket();
-    void send_datagram();
 };
 
 
