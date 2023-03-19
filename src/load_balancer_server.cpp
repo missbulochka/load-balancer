@@ -29,18 +29,18 @@ void load_balancer_server::bind_socket() {
     std::cout << "Socket successfully bound\n";
 }
 
-void load_balancer_server::recv_datagram() {
+std::string load_balancer_server::recv_datagram() {
     if (recvfrom(sockfd,
-                 reinterpret_cast<void*>(datagram),
+                 reinterpret_cast<void*>(&datagram),
                  sizeof(datagram),
                  MSG_WAITALL,
                  reinterpret_cast<struct sockaddr*>(&client_addr),
                  &client_addr_len)
         == -1) {
         perror("Error receiving datagram from socket");
-        return;
+        return "";
     }
-    std::cout << "Datagram received\n";
+    return datagram;
 }
 
 void load_balancer_server::start_server(std::uint16_t recv_port) {

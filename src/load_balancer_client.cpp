@@ -17,14 +17,15 @@ void load_balancer_client::create_socket() {
     std::cout << "Socket successfully created\n";
 }
 
-void load_balancer_client::send_datagram(std::pair<std::string, std::uint16_t> recv_worker, std::string recv_datagram) {
+void load_balancer_client::send_datagram(std::pair<std::string, std::uint16_t> recv_worker,
+                                         std::string* recv_datagram) {
     if (inet_aton(reinterpret_cast<const char*>(&recv_worker.first[0]), &server_addr.sin_addr) == 0) {
         perror("inet_aton() failed");
     }
     server_addr.sin_port = htons(recv_worker.second);
     if (sendto(sockfd,
-               reinterpret_cast<const void*>(&recv_datagram),
-               recv_datagram.size(),
+               reinterpret_cast<const void*>(recv_datagram),
+               recv_datagram->size(),
                0,
                reinterpret_cast<const struct sockaddr*>(&server_addr),
                sizeof(server_addr))

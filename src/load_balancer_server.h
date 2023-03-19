@@ -9,13 +9,13 @@ class load_balancer_server {
 public:
     explicit load_balancer_server();
     void start_server(std::uint16_t recv_port);
-    void recv_datagram();
+    std::string recv_datagram();
     void stop_server();
 
 private:
     int sockfd;
     std::uint16_t port;
-    std::string datagram[1024];
+    char datagram[1024];
     socklen_t client_addr_len;
     struct sockaddr_in client_addr;
     struct sockaddr_in server_addr;
