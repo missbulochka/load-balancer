@@ -5,6 +5,14 @@
 #include "load_balancer_server.h"
 #include "load_balancer_client.h"
 #include <thread>
+#include <ctime>
+
+struct t_bucket {
+    const std::uint32_t my_cbs;
+    bool msg_flag;
+    std::uint32_t my_tcs;
+    time_t fix_time;
+};
 
 class balancer {
 public:
@@ -18,6 +26,7 @@ private:
     load_balancer_server server;
     load_balancer_client client;
     std::thread balancer_thread;
+    struct t_bucket bucket;
 
     void start_balancer();
     void balancer_run();

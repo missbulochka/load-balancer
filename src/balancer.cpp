@@ -3,9 +3,10 @@
 
 balancer::balancer()
     : exit_flag(false)
-    , next(-1)
+    , next(0)
     , datagram()
-    , balancer_thread(&balancer::balancer_run, this) {
+    , balancer_thread(&balancer::balancer_run, this)
+    , bucket{conf.get_max_number_of_datagrams(), false, bucket.my_cbs, std::time(nullptr)} {
     start_balancer();
 }
 
@@ -19,9 +20,24 @@ void balancer::start_balancer() {
 
 void balancer::balancer_run() {
     std::cout << "Balancer start to work\n";
+
     while (!exit_flag) {
+        if ((bucket.my_tcs == 0) && (std::time(nullptr) - bucket.fix_time < 1)) {
+            if (!bucket.msg_flag) {
+                std::cout << "Datagrams are drop\n";
+                bucket.msg_flag = true;
+            }
+            continue;
+        }
+        else if (bucket.my_tcs == 0) {
+            std::time(&bucket.fix_time);
+            bucket.my_tcs = bucket.my_cbs;
+            bucket.msg_flag = false;
+        }
+
         if (!(datagram = server.recv_datagram()).empty()) {
             client.send_datagram(get_next_node(), &datagram);
+            bucket.my_tcs--;
         }
         else {
             std::cout << "Datagram is not received\n";
