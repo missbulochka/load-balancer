@@ -12,11 +12,6 @@ load_balancer_server::load_balancer_server()
     , client_addr{}
     , server_addr{AF_INET, htons(port), INADDR_ANY} {}
 
-void load_balancer_server::signal_handler(int signal_num) {
-    std::cout << "Interrupt signal (" << signal_num << ") received\n";
-    exit(signal_num);
-}
-
 void load_balancer_server::create_socket() {
     if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
         perror("Socket creation failed");
@@ -35,26 +30,23 @@ void load_balancer_server::bind_socket() {
 }
 
 void load_balancer_server::recv_datagram() {
-    while (true) {
-        if (recvfrom(sockfd,
-                     reinterpret_cast<void*>(datagram),
-                     sizeof(datagram),
-                     MSG_WAITALL,
-                     reinterpret_cast<struct sockaddr*>(&client_addr),
-                     &client_addr_len)
-            == -1) {
-            perror("Error receiving datagram from socket");
-            return;
-        }
-        std::cout << "Datagram received\n";
+    if (recvfrom(sockfd,
+                 reinterpret_cast<void*>(datagram),
+                 sizeof(datagram),
+                 MSG_WAITALL,
+                 reinterpret_cast<struct sockaddr*>(&client_addr),
+                 &client_addr_len)
+        == -1) {
+        perror("Error receiving datagram from socket");
+        return;
     }
+    std::cout << "Datagram received\n";
 }
 
 void load_balancer_server::start_server(std::uint16_t recv_port) {
     create_socket();
     port = recv_port;
     bind_socket();
-    signal(SIGTERM, signal_handler);
     recv_datagram();
 }
 

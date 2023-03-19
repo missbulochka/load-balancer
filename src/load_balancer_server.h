@@ -19,7 +19,6 @@ private:
     struct sockaddr_in client_addr;
     struct sockaddr_in server_addr;
 
-    static void signal_handler(int signum);
     void create_socket();
     void bind_socket();
     void recv_datagram();

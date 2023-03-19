@@ -9,16 +9,13 @@ class load_balancer_client {
 public:
     load_balancer_client();
     void start_client();
-    void send_datagram(std::pair<std::string, std::uint16_t> recv_worker);
+    void send_datagram(std::pair<std::string, std::uint16_t> recv_worker, std::string recv_datagram);
     void stop_client();
 
 private:
     int sockfd;
-    std::pair<std::string, std::uint16_t> worker;
-    std::string datagram;
     struct sockaddr_in server_addr;
 
-    static void signal_handler(int signum);
     void create_socket();
 };
 
