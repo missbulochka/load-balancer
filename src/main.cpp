@@ -1,13 +1,7 @@
-#include "config.h"
-#include "load_balancer_server.h"
-#include "load_balancer_client.h"
+#include "balancer.h"
 
 int main() {
-    config conf;
-    load_balancer_server server;
-    load_balancer_client client;
-    server.start_server();
-    client.start_client();
+    balancer my_balancer;
 
     return 0;
 }
