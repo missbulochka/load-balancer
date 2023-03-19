@@ -14,7 +14,7 @@ void load_balancer_client::create_socket() {
         perror("Socket creation failed (client)");
         exit(EXIT_FAILURE);
     }
-    std::cout << "Socket successfully created\n";
+    std::cout << "Socket successfully created (client)\n";
 }
 
 void load_balancer_client::send_datagram(std::pair<std::string, std::uint16_t> recv_worker,

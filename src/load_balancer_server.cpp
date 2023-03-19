@@ -17,7 +17,7 @@ void load_balancer_server::create_socket() {
         perror("Socket creation failed");
         exit(EXIT_FAILURE);
     }
-    std::cout << "Socket successfully created\n";
+    std::cout << "Socket successfully created (server)\n";
 }
 
 void load_balancer_server::bind_socket() {
@@ -26,7 +26,7 @@ void load_balancer_server::bind_socket() {
         perror("Bind failed");
         exit(EXIT_FAILURE);
     }
-    std::cout << "Socket successfully bound\n";
+    std::cout << "Socket successfully bound (server)\n";
 }
 
 std::string load_balancer_server::recv_datagram() {
