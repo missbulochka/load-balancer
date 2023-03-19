@@ -3,7 +3,9 @@
 
 balancer::balancer()
     : exit_flag(false)
+    , next(0)
     , datagram()
+    , workers(conf.get_workers())
     , balancer_thread(&balancer::balancer_run, this) {
     start_balancer();
 }
@@ -29,8 +31,9 @@ void balancer::balancer_run() {
 }
 
 std::pair<std::string, std::uint16_t> balancer::get_next_node() {
-    auto a = std::make_pair("127.55.6.1", 5001);
-    return a;
+    next = (next + 1) % workers.size();
+
+    return workers[next];
 }
 
 void balancer::stop_balancer() {
