@@ -44,10 +44,9 @@ void load_balancer_server::recv_datagram() {
 }
 
 void load_balancer_server::start_server(std::uint16_t recv_port) {
-    create_socket();
     port = recv_port;
+    create_socket();
     bind_socket();
-    recv_datagram();
 }
 
 void load_balancer_server::stop_server() {

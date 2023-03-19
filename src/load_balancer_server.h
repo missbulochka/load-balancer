@@ -8,7 +8,8 @@
 class load_balancer_server {
 public:
     explicit load_balancer_server();
-    void start_server(std::uint16_t port);
+    void start_server(std::uint16_t recv_port);
+    void recv_datagram();
     void stop_server();
 
 private:
@@ -21,7 +22,6 @@ private:
 
     void create_socket();
     void bind_socket();
-    void recv_datagram();
 };
 
 
