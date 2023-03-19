@@ -3,9 +3,8 @@
 
 balancer::balancer()
     : exit_flag(false)
-    , next(0)
+    , next(-1)
     , datagram()
-    , workers(conf.get_workers())
     , balancer_thread(&balancer::balancer_run, this) {
     start_balancer();
 }
@@ -31,9 +30,9 @@ void balancer::balancer_run() {
 }
 
 std::pair<std::string, std::uint16_t> balancer::get_next_node() {
-    next = (next + 1) % workers.size();
+    next = (next + 1) % conf.get_workers().size();
 
-    return workers[next];
+    return conf.get_workers().at(next);
 }
 
 void balancer::stop_balancer() {

@@ -12,10 +12,9 @@ public:
 
 private:
     bool exit_flag;
-    std::uint16_t next;
+    size_t next;
     std::string datagram;
     config conf;
-    std::vector<std::pair<std::string, std::uint16_t>> workers;
     load_balancer_server server;
     load_balancer_client client;
     std::thread balancer_thread;
