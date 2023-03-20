@@ -6,7 +6,7 @@ balancer::balancer()
     , next(0)
     , datagram()
     , balancer_thread(&balancer::balancer_run, this)
-    , bucket{conf.get_max_number_of_datagrams(), bucket.my_cbs, std::time(nullptr)} {
+    , bucket{conf.get_max_number_of_datagrams(), 0, std::time(nullptr)} {
     start_balancer();
 }
 
@@ -23,7 +23,8 @@ void balancer::balancer_run() {
 
     while (!exit_flag) {
         if (!(datagram = server.recv_datagram()).empty()) {
-            if ((bucket.my_tcs == 0) && (std::time(nullptr) - bucket.fix_time < 1)) {
+            if (((bucket.my_tcs == bucket.my_cbs) && (std::time(nullptr) - bucket.fix_time < 1))
+                || bucket.my_cbs == 0) {
                 std::cout << "Datagram rejected\n";
                 continue;
             }
@@ -31,7 +32,7 @@ void balancer::balancer_run() {
                 std::time(&bucket.fix_time);
                 bucket.my_tcs = bucket.my_cbs;
             }
-            bucket.my_tcs--;
+            bucket.my_tcs++;
             client.send_datagram(get_next_node(), &datagram);
         }
         else {
