@@ -28,9 +28,9 @@ void balancer::balancer_run() {
                 std::cout << "Datagram rejected\n";
                 continue;
             }
-            else if (bucket.my_tcs == 0) {
+            else if (bucket.my_tcs == bucket.my_cbs) {
                 std::time(&bucket.fix_time);
-                bucket.my_tcs = bucket.my_cbs;
+                bucket.my_tcs = 0;
             }
             bucket.my_tcs++;
             client.send_datagram(get_next_node(), &datagram);
