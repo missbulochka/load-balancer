@@ -9,7 +9,6 @@
 
 struct t_bucket {
     const std::uint32_t my_cbs;
-    bool msg_flag;
     std::uint32_t my_tcs;
     time_t fix_time;
 };
