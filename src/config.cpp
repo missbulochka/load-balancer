@@ -33,7 +33,14 @@ void config::get_conf() {
             config_file >> port;
         }
         else if (config_string == "max_number_of_datagrams:") {
-            config_file >> max_number_of_datagrams;
+            int recv_number{};
+            config_file >> recv_number;
+            if (recv_number < 0) {
+                std::cout << "Bad number of datagrams. Max number of datagrams will be = 0\n";
+                max_number_of_datagrams = 0;
+            } else {
+                max_number_of_datagrams = recv_number;
+            }
         }
         else if (config_string == "workers:") {
             while (config_file >> config_string) {
