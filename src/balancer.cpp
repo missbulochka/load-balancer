@@ -25,6 +25,7 @@ void balancer::start_balancer() {
 }
 
 void balancer::balancer_run() {
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
     std::cout << "Balancer start to work\n";
 
     while (!exit_flag) {
@@ -45,19 +46,24 @@ void balancer::balancer_run() {
 }
 
 bool balancer::sending_is_available() {
+    if (conf.get_max_number_of_datagrams() == 0) {
+        return false;
+    }
+
     auto current_duration = [this]() {
         auto duration = std::chrono::high_resolution_clock::now() - this->lim.fixed_time;
         return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
     };
 
     if (current_duration() < 1000) {
-        if (lim.count < conf.get_max_number_of_datagrams()) {
-            return true;
-        }
-        else {
+        if (lim.count >= conf.get_max_number_of_datagrams()) {
             return false;
         }
-    } else {
+        else {
+            return true;
+        }
+    }
+    else {
         log << "New start" << std::endl;
         lim.fixed_time = std::chrono::high_resolution_clock::now();
         lim.count = 0;
