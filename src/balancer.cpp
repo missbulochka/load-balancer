@@ -34,10 +34,11 @@ void balancer::balancer_run() {
                 std::cout << "Datagram rejected\n";
                 continue;
             }
-            lim.count++;
-            log << lim.count << ": " << std::chrono::system_clock::to_time_t(std::chrono::high_resolution_clock::now())
-                << std::endl;
-            client.send_datagram(get_next_node(), &datagram);
+            if (client.send_datagram(get_next_node(), &datagram)) {
+                log << lim.count << ": "
+                    << std::chrono::system_clock::to_time_t(std::chrono::high_resolution_clock::now()) << std::endl;
+                lim.count++;
+            }
         }
         else {
             std::cout << "Datagram is not received\n";

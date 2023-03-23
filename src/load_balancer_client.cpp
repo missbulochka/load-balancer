@@ -17,7 +17,7 @@ void load_balancer_client::create_socket() {
     std::cout << "Socket successfully created (client)\n";
 }
 
-void load_balancer_client::send_datagram(std::pair<std::string, std::uint16_t> recv_worker,
+bool load_balancer_client::send_datagram(std::pair<std::string, std::uint16_t> recv_worker,
                                          std::string* recv_datagram) {
     if (inet_aton(reinterpret_cast<const char*>(&recv_worker.first[0]), &server_addr.sin_addr) == 0) {
         perror("inet_aton() failed");
@@ -31,7 +31,9 @@ void load_balancer_client::send_datagram(std::pair<std::string, std::uint16_t> r
                sizeof(server_addr))
         == -1) {
         perror("Error receiving datagram from socket");
+        return false;
     }
+    return true;
 }
 
 void load_balancer_client::start_client() {
