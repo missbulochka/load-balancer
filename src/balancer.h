@@ -5,12 +5,14 @@
 #include "load_balancer_server.h"
 #include "load_balancer_client.h"
 #include <thread>
+#include <vector>
 #include <ctime>
+#include <fstream>
+#include <chrono>
 
-struct t_bucket {
-    const std::uint32_t my_cbs;
-    std::uint32_t my_tcs;
-    time_t fix_time;
+struct package_limit {
+    std::uint32_t count;
+    std::chrono::high_resolution_clock::time_point fixed_time;
 };
 
 class balancer {
@@ -25,10 +27,12 @@ private:
     load_balancer_server server;
     load_balancer_client client;
     std::thread balancer_thread;
-    struct t_bucket bucket;
+    struct package_limit lim;
+    std::ofstream log;
 
     void start_balancer();
     void balancer_run();
+    bool sending_is_available();
     std::pair<std::string, std::uint16_t> get_next_node();
     void stop_balancer();
 };

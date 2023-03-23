@@ -6,15 +6,21 @@ balancer::balancer()
     , next(0)
     , datagram()
     , balancer_thread(&balancer::balancer_run, this)
-    , bucket{conf.get_max_number_of_datagrams(), 0, std::time(nullptr)} {
+    , lim{0, std::chrono::high_resolution_clock::now()} {
     start_balancer();
 }
 
 void balancer::start_balancer() {
+    log.open("../src/log.txt");
+    log << "Start" << std::endl;
+    log.close();
+    log.open("../src/log.txt", std::ios::app);
+
     server.start_server(conf.get_port());
     client.start_client();
 
     getchar();
+    log.close();
     stop_balancer();
 }
 
@@ -23,21 +29,39 @@ void balancer::balancer_run() {
 
     while (!exit_flag) {
         if (!(datagram = server.recv_datagram()).empty()) {
-            if (((bucket.my_tcs == bucket.my_cbs) && (std::time(nullptr) - bucket.fix_time < 1))
-                || bucket.my_cbs == 0) {
+            if (!sending_is_available()) {
                 std::cout << "Datagram rejected\n";
                 continue;
             }
-            else if (bucket.my_tcs == bucket.my_cbs) {
-                std::time(&bucket.fix_time);
-                bucket.my_tcs = 0;
-            }
-            bucket.my_tcs++;
+            lim.count++;
+            log << lim.count << ": " << std::chrono::system_clock::to_time_t(std::chrono::high_resolution_clock::now())
+                << std::endl;
             client.send_datagram(get_next_node(), &datagram);
         }
         else {
             std::cout << "Datagram is not received\n";
         }
+    }
+}
+
+bool balancer::sending_is_available() {
+    auto current_duration = [this]() {
+        auto duration = std::chrono::high_resolution_clock::now() - this->lim.fixed_time;
+        return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    };
+
+    if (current_duration() < 1000) {
+        if (lim.count < conf.get_max_number_of_datagrams()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    } else {
+        log << "New start" << std::endl;
+        lim.fixed_time = std::chrono::high_resolution_clock::now();
+        lim.count = 0;
+        return true;
     }
 }
 
