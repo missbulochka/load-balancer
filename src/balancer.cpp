@@ -6,7 +6,7 @@ balancer::balancer()
     , next(0)
     , datagram()
     , balancer_thread(&balancer::balancer_run, this)
-    , bucket{conf.get_max_number_of_datagrams(), 0, std::time(nullptr)} {
+    , package_limit{0, std::chrono::high_resolution_clock::now()} {
     start_balancer();
 }
 
@@ -19,25 +19,42 @@ void balancer::start_balancer() {
 }
 
 void balancer::balancer_run() {
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
     std::cout << "Balancer start to work\n";
 
     while (!exit_flag) {
         if (!(datagram = server.recv_datagram()).empty()) {
-            if (((bucket.my_tcs == bucket.my_cbs) && (std::time(nullptr) - bucket.fix_time < 1))
-                || bucket.my_cbs == 0) {
+            if (!sending_is_available()) {
                 std::cout << "Datagram rejected\n";
                 continue;
             }
-            else if (bucket.my_tcs == bucket.my_cbs) {
-                std::time(&bucket.fix_time);
-                bucket.my_tcs = 0;
+            if (client.send_datagram(get_next_node(), &datagram)) {
+                package_limit.count++;
             }
-            bucket.my_tcs++;
-            client.send_datagram(get_next_node(), &datagram);
         }
         else {
             std::cout << "Datagram is not received\n";
         }
+    }
+}
+
+bool balancer::sending_is_available() {
+    if (conf.get_max_number_of_datagrams() == 0) {
+        return false;
+    }
+
+    auto current_duration = [this]() {
+        auto duration = std::chrono::high_resolution_clock::now() - this->package_limit.fixed_time;
+        return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
+    };
+
+    if (current_duration() < 1000) {
+        return package_limit.count < conf.get_max_number_of_datagrams();
+    }
+    else {
+        package_limit.fixed_time = std::chrono::high_resolution_clock::now();
+        package_limit.count = 0;
+        return true;
     }
 }
 
