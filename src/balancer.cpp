@@ -6,7 +6,7 @@ balancer::balancer()
     , next(0)
     , datagram()
     , balancer_thread(&balancer::balancer_run, this)
-    , lim{0, std::chrono::high_resolution_clock::now()} {
+    , package_limit{0, std::chrono::high_resolution_clock::now()} {
     start_balancer();
 }
 
@@ -25,7 +25,7 @@ void balancer::start_balancer() {
 }
 
 void balancer::balancer_run() {
-    std::this_thread::sleep_for(std::chrono::milliseconds(1));
+    std::this_thread::sleep_for(std::chrono::milliseconds(5));
     std::cout << "Balancer start to work\n";
 
     while (!exit_flag) {
@@ -35,9 +35,9 @@ void balancer::balancer_run() {
                 continue;
             }
             if (client.send_datagram(get_next_node(), &datagram)) {
-                log << lim.count << ": "
+                log << (package_limit.count + 1) << ": "
                     << std::chrono::system_clock::to_time_t(std::chrono::high_resolution_clock::now()) << std::endl;
-                lim.count++;
+                package_limit.count++;
             }
         }
         else {
@@ -52,22 +52,17 @@ bool balancer::sending_is_available() {
     }
 
     auto current_duration = [this]() {
-        auto duration = std::chrono::high_resolution_clock::now() - this->lim.fixed_time;
+        auto duration = std::chrono::high_resolution_clock::now() - this->package_limit.fixed_time;
         return std::chrono::duration_cast<std::chrono::milliseconds>(duration).count();
     };
 
     if (current_duration() < 1000) {
-        if (lim.count >= conf.get_max_number_of_datagrams()) {
-            return false;
-        }
-        else {
-            return true;
-        }
+        return package_limit.count < conf.get_max_number_of_datagrams();
     }
     else {
         log << "New start" << std::endl;
-        lim.fixed_time = std::chrono::high_resolution_clock::now();
-        lim.count = 0;
+        package_limit.fixed_time = std::chrono::high_resolution_clock::now();
+        package_limit.count = 0;
         return true;
     }
 }

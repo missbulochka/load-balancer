@@ -10,7 +10,7 @@
 #include <fstream>
 #include <chrono>
 
-struct package_limit {
+struct package_lim {
     std::uint32_t count;
     std::chrono::high_resolution_clock::time_point fixed_time;
 };
@@ -27,7 +27,7 @@ private:
     load_balancer_server server;
     load_balancer_client client;
     std::thread balancer_thread;
-    struct package_limit lim;
+    struct package_lim package_limit;
     std::ofstream log;
 
     void start_balancer();
