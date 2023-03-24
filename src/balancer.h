@@ -5,9 +5,6 @@
 #include "load_balancer_server.h"
 #include "load_balancer_client.h"
 #include <thread>
-#include <vector>
-#include <ctime>
-#include <fstream>
 #include <chrono>
 
 struct package_lim {
@@ -28,7 +25,6 @@ private:
     load_balancer_client client;
     std::thread balancer_thread;
     struct package_lim package_limit;
-    std::ofstream log;
 
     void start_balancer();
     void balancer_run();

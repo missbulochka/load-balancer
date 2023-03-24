@@ -11,16 +11,10 @@ balancer::balancer()
 }
 
 void balancer::start_balancer() {
-    log.open("../src/log.txt");
-    log << "Start" << std::endl;
-    log.close();
-    log.open("../src/log.txt", std::ios::app);
-
     server.start_server(conf.get_port());
     client.start_client();
 
     getchar();
-    log.close();
     stop_balancer();
 }
 
@@ -35,8 +29,6 @@ void balancer::balancer_run() {
                 continue;
             }
             if (client.send_datagram(get_next_node(), &datagram)) {
-                log << (package_limit.count + 1) << ": "
-                    << std::chrono::system_clock::to_time_t(std::chrono::high_resolution_clock::now()) << std::endl;
                 package_limit.count++;
             }
         }
@@ -60,7 +52,6 @@ bool balancer::sending_is_available() {
         return package_limit.count < conf.get_max_number_of_datagrams();
     }
     else {
-        log << "New start" << std::endl;
         package_limit.fixed_time = std::chrono::high_resolution_clock::now();
         package_limit.count = 0;
         return true;
